@@ -1,4 +1,4 @@
-# How to run
+# Setup
 
 `pip install virtualenv`
 
@@ -21,6 +21,10 @@ to install all of the libraries the was used.
 `pip install -r requirements.txt`
 
 # Development
+
+to activate the virtual environment again
+
+`source trs/bin/activate`
 
 to generate a requiremnets.txt for all the libraries that was used.
 
