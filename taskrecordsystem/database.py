@@ -37,7 +37,7 @@ class DB():
             self.cursor.execute(statement,row)
             self.connection.commit()
         except mariadb.Error as e:
-            print(f"Error: {e}")
+            log.error(e)
     
     def add_multiple_query(self,statement,rows):
         """Example of insert query with multiple rows at a time
@@ -56,7 +56,7 @@ class DB():
             self.cursor.executemany(statement,rows);
             self.connection.commit()
         except mariadb.Error as e:
-            print(f"Error: {e}")
+            log.error(e)
     
     def get_query(self,statement,values=()
                   ):
@@ -84,11 +84,10 @@ class DB():
 
 if __name__ == '__main__':
     #Examples
-    log.info("test")
     db = DB()
     db.connect()
     # Select Statements
     print([x for x in db.get_query("SELECT * FROM category")])
     # Insert Statements
     db.add_query("INSERT INTO task(title,details,deadline,finished,category_id) VALUES (%s,%s,STR_TO_DATE(%s,'%Y-%m-%d %h:%i:%s'),%d,%d)"
-                 ,("THIS IS TITLE","DEATILS","2013-07-22 12:50:05",True,1))
+                 ,("THIS IS TITLE","DETAILS","2013-07-22 12:50:05",True,1))
