@@ -1,31 +1,50 @@
-# Setup
+# Task Record System
 
-`pip install virtualenv`
+A simplified version of your task listing app in your phone (e.g., Samsung Notes, Google Calendar) where you can list tasks, provide grouping and deadline. That is implemented python.
 
-create a virtual environment with python 3.10
+## Installation
 
-`virtualenv -p python3.10 trs`
+Create a virtual environment with python 3.10 .
 
-to activate the virtual environment
+```bash
+pip install virtualenv
+virtualenv -p python3.10 trs
+```
 
-`source trs/bin/activate`
+Activate the created virtual environment
+
+```bash
+source trs/bin/activate
+```
 
 run this to check if you are using the virtual environment
 
-`which python`
+```bash
+which python
+```
 
 output should look like `.../trs/bin/python`
 
 to install all of the libraries the was used.
 
-`pip install -r requirements.txt`
+```bash
+pip install -r requirements.txt
+```
 
-# Development
+## Development
 
 to activate the virtual environment again
 
-`source trs/bin/activate`
+```bash
+source trs/bin/activate
+```
 
 to generate a requiremnets.txt for all the libraries that was used.
 
-`pip freeze > requirements.txt`
+```bash
+pip freeze > requirements.txt
+```
+
+## Contributors
+
+- Van Paul Angelo C. Dayag
