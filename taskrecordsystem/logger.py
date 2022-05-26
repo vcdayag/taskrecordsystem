@@ -1,7 +1,8 @@
 import logging
 from rich.logging import RichHandler
 
-def logger(l="INFO"):
+
+def logger(l="DEBUG"):
     logging.basicConfig(
         level=l, format="%(message)s", handlers=[RichHandler()]
     )
