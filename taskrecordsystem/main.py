@@ -18,7 +18,8 @@ def menu():
           [3] Delete Task
           """
           )
-    choice = IntPrompt.ask("Choice",choices=("1","2","3"),show_choices=False)
+    CHOICES = ("1","2","3")
+    choice = IntPrompt.ask("Choice",choices=CHOICES,show_choices=False)
     # console.print(":pile_of_poo: [prompt.invalid]Number must be between 1 and 10")
     print(f"ito napili mo loads {choice} {type(choice)}")
 
