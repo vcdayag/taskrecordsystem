@@ -8,13 +8,13 @@ Create a virtual environment with python 3.10 .
 
 ```bash
 pip install virtualenv
-virtualenv -p python3.10 trs
+virtualenv -p python3.10 env
 ```
 
 Activate the created virtual environment
 
 ```bash
-source trs/bin/activate
+source env/bin/activate
 ```
 
 run this to check if you are using the virtual environment
@@ -36,7 +36,7 @@ pip install -r requirements.txt
 to activate the virtual environment again
 
 ```bash
-source trs/bin/activate
+source env/bin/activate
 ```
 
 to generate a requiremnets.txt for all the libraries that was used.
