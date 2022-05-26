@@ -1,12 +1,15 @@
+# Custom modules
 import database as db
+from logger import logger
+log = logger()
 
+# Libraries used
 from rich.console import Console
 from rich.prompt import Prompt, IntPrompt
 from rich.columns import Columns
 from rich.panel import Panel
 from rich.text import Text
 from rich.padding import Padding
-
 console = Console()
 
 def menu():

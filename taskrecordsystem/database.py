@@ -1,5 +1,7 @@
-import mariadb
+from logger import logger
+log = logger()
 
+import mariadb
 def test_data():
     return ["Aaberg", "Aalst"]
 
@@ -10,10 +12,11 @@ class DB():
     
     def connect(self):
         self.connection = mariadb.connect(
-            user="",
-            password="",
-            host="",
-            database=""
+            user="root",
+            password="password",
+            host="127.0.0.1",
+            port=3306,
+            database="taskrecordsystem"
         )
         self.cursor = self.connection.cursor()
     
@@ -32,6 +35,7 @@ class DB():
         """
         try:
             self.cursor.execute(statement,row)
+            self.connection.commit()
         except mariadb.Error as e:
             print(f"Error: {e}")
     
@@ -50,10 +54,12 @@ class DB():
         """
         try:
             self.cursor.executemany(statement,rows);
+            self.connection.commit()
         except mariadb.Error as e:
             print(f"Error: {e}")
     
-    def get_query(self,statement,values):
+    def get_query(self,statement,values=()
+                  ):
         """_summary_
 
         Args:
@@ -75,3 +81,14 @@ class DB():
     
     def close(self):
         self.connection.close()
+
+if __name__ == '__main__':
+    #Examples
+    log.info("test")
+    db = DB()
+    db.connect()
+    # Select Statements
+    print([x for x in db.get_query("SELECT * FROM category")])
+    # Insert Statements
+    db.add_query("INSERT INTO task(title,details,deadline,finished,category_id) VALUES (%s,%s,STR_TO_DATE(%s,'%Y-%m-%d %h:%i:%s'),%d,%d)"
+                 ,("THIS IS TITLE","DEATILS","2013-07-22 12:50:05",True,1))
