@@ -25,7 +25,7 @@ run this to check if you are using the virtual environment
 which python
 ```
 
-output should look like `.../trs/bin/python`
+output should look like `.../env/bin/python`
 
 to install all of the libraries the was used.
 
@@ -46,6 +46,8 @@ python taskrecordsystem/main.py
 `taskrecordsystem/database.py` contains all the sql related code.
 
 `taskrecordsystem/main.py` contains the terminal ui code and user inputs.
+
+`taskrecordsystem/logger.py` contains the logger config and code.
 
 to activate the virtual environment.
 
