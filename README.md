@@ -4,11 +4,13 @@ A simplified version of your task listing app in your phone (e.g., Samsung Notes
 
 ## Installation
 
+**Make sure you have installed python and mariadb**
+
 Create a virtual environment with python 3.10 .
 
 ```bash
 pip install virtualenv
-virtualenv -p python3.10 env
+python -m virtualenv -p python3.10 env
 ```
 
 Activate the created virtual environment
