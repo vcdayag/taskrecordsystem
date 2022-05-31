@@ -47,11 +47,6 @@ class DATABASE():
             CONSTRAINT `task_category_id_fk` FOREIGN KEY(`category_id`) REFERENCES `category`(`category_id`)
         )''')
 
-        # self.cursor.execute("INSERT INTO task(title, details, deadline) VALUES ('title', '<details_placeholder>', CURTIME())")
-        # self.connection.commit()
-
-        
-
     def get_rowcount(self):
         self.cursor.execute("SELECT * FROM task")
         result = self.cursor.fetchall()
