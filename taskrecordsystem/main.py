@@ -25,24 +25,24 @@ def view_tasks(viewType="ALL"):
             result = db.get_tasks_month(month)
         case _:
             result = db.get_tasks()
-    
+
     if db.get_rowcount() == 0:
         console.print("\nNo Tasks Yet!")
         return
 
     for task_id, title, details, deadline, finished, category_id in result:
         info = Text(justify="left")
-        info.append("Category: ", style = "bold green")
+        info.append("Category: ", style="bold green")
         info.append(str(category_id))
         info.append(" | ")
-        info.append("Deadline: ", style = "bold green")
+        info.append("Deadline: ", style="bold green")
         info.append(str(deadline))
         info.append(" | ")
-        info.append("Finished: ", style = "bold green")
+        info.append("Finished: ", style="bold green")
         info.append(str(bool(finished)))
         info.append("\n")
         info.append(details)
-        
+
         console.print(
             Panel(
                 info,
@@ -51,8 +51,9 @@ def view_tasks(viewType="ALL"):
                 title_align="left",
                 highlight=True,
                 expand=False
-                )
             )
+        )
+
 
 def view_categories():
     result = db.get_categories()
@@ -70,7 +71,7 @@ def add_task():
     title = Prompt.ask("Title")
     details = Prompt.ask("Details")
     deadline = Prompt.ask("Deadline (YYYY-MM-DD)")
-    db.add_task(title, details,deadline)
+    db.add_task(title, details, deadline)
 
 
 def delete_task():
@@ -125,6 +126,7 @@ def menu():
 
     # console.print(":pile_of_poo: [prompt.invalid]Number must be between 1 and 10")
     # print(f"ito napili mo loads {choice} {type(choice)}")
+
 
 if __name__ == '__main__':
     menu()
