@@ -16,10 +16,13 @@ db = database.DATABASE()
 
 
 def view_tasks():
-    result = db.get_tasks()
-    if db.get_rowcount() == 0:
+    db.cursor.execute("SELECT * FROM task")
+    result = db.cursor.fetchall()
+    if db.cursor.rowcount == 0:
         log.debug("walang laman")
         return
+
+    result = db.get_tasks()
 
     for title, details in result:
         console.print(Panel(Text(details, justify="left"), padding=(1, 5),
