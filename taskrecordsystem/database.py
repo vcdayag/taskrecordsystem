@@ -50,9 +50,11 @@ class DATABASE():
         log.debug("Connected succesfully")
 
     def get_rowcount(self):
-        return self.cursor.rowcount
+        self.cursor.execute("SELECT * FROM task")
+        result = self.cursor.fetchall()
+        return self.cursor.rowcount 
 
-    def add_query(self, statement, row):
+    def add_query(self):
         """Example of insert query one row at a time
 
         Args:
@@ -65,9 +67,14 @@ class DATABASE():
         statement = "INSERT INTO test.contacts(first_name, last_name, email) VALUES (?, ?, ?)",
         row = (first_name, last_name, email)
         """
+        print("\n***Create New Task***")
+        title = input("Title: ")
+        details = input("Details: ")
+        
         try:
-            self.cursor.execute(statement, row)
+            self.cursor.execute("INSERT INTO task(title, details, deadline) VALUES ('" + title + "', '" + details + "',  CURTIME())")
             self.connection.commit()
+            print("\nSuccessfully Added!")
         except mariadb.Error as e:
             log.error(e)
 
@@ -111,7 +118,7 @@ class DATABASE():
         return self.cursor
 
     def get_tasks(self):
-        return self.get_query("SELECT title, details FROM task")
+        return self.get_query("SELECT task_id, title, details FROM task")
 
     def close(self):
         self.connection.close()

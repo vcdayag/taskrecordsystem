@@ -16,17 +16,16 @@ db = database.DATABASE()
 
 
 def view_tasks():
-    db.cursor.execute("SELECT * FROM task")
-    result = db.cursor.fetchall()
-    if db.cursor.rowcount == 0:
-        log.debug("walang laman")
-        return
+    rows = db.get_rowcount();
+    if rows == 0:
+            print("\nNo Tasks Yet!")
+            return
 
     result = db.get_tasks()
 
-    for title, details in result:
+    for task_id, title, details in result:
         console.print(Panel(Text(details, justify="left"), padding=(1, 5),
-                            title=title, title_align="left"))
+                            title=str(task_id) + '. ' + title, title_align="left"))
 
 
 CHOICES = ("0", "1", "2", "3")
@@ -37,13 +36,13 @@ def menu():
         print("""
             [0] Quit
             [1] Add Task
-            [2] View Task
+            [2] View Tasks
             [3] Delete Task
             """
               )
         choice = IntPrompt.ask("Choice", choices=CHOICES, show_choices=False)
         match choice:
-            case 1: view_tasks()
+            case 1: db.add_query()
             case 2: view_tasks()
             case 0: break
 
