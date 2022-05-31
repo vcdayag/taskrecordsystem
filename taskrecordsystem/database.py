@@ -48,8 +48,6 @@ class DATABASE():
         )''')
 
     def get_rowcount(self):
-        self.cursor.execute("SELECT * FROM task")
-        result = self.cursor.fetchall()
         return self.cursor.rowcount 
 
     def add_task(self,title,details):
@@ -61,10 +59,32 @@ class DATABASE():
             log.info("Successfully Added!")
         except mariadb.Error as e:
             log.error(e)
-
-    def delete_task(self,taskid):
+    
+    def add_category(self,name,description):
+        # Example of insert query one row at a time
+        
         try:
-            self.cursor.execute("DELETE FROM task WHERE task_id=%s",(taskid,))
+            self.cursor.execute("INSERT INTO category(name, description) VALUES (%s, %s)",(name,description))
+            self.connection.commit()
+            log.info("Successfully Added!")
+        except mariadb.Error as e:
+            log.error(e)
+
+    def delete_task(self,Id):
+        try:
+            self.cursor.execute("DELETE FROM task WHERE task_id=%s",(Id,))
+            self.connection.commit()
+            if self.cursor.rowcount == 0:
+                log.info("No task was deleted")
+            else:
+                log.info("Successfully Deleted!")
+                
+        except mariadb.Error as e:
+            log.error(e)
+    
+    def delete_category(self,Id):
+        try:
+            self.cursor.execute("DELETE FROM category WHERE category_id=%s",(Id,))
             self.connection.commit()
             if self.cursor.rowcount == 0:
                 log.info("No task was deleted")
@@ -111,10 +131,13 @@ class DATABASE():
         """
 
         self.cursor.execute(statement, values)
-        return self.cursor
+        return self.cursor.fetchall()
 
     def get_tasks(self):
         return self.get_query("SELECT task_id, title, details FROM task")
+    
+    def get_categories(self):
+        return self.get_query("SELECT category_id, name, description FROM category")
 
     def close(self):
         self.connection.close()
