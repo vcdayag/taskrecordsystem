@@ -9,33 +9,73 @@ class DATABASE():
         self.cursor = None
         self.connection = mariadb.connect(
             user="root",
-            password="password",
+            password="zenith.09",
             host="127.0.0.1",
             port=3306,
             database="taskrecordsystem"
         )
         self.cursor = self.connection.cursor()
+
+        # self.cursor.execute("DROP database IF EXISTS taskrecordsystem")
+
+        #Creating a database
+        self.cursor.execute("CREATE database IF NOT EXISTS taskrecordsystem")
+
+        #Use the database
+        self.cursor.execute("USE taskrecordsystem")
+
+        #Creating category table
+        self.cursor.execute('''CREATE TABLE IF NOT EXISTS `category`(
+            `category_id` INT UNSIGNED AUTO_INCREMENT,
+            `name` VARCHAR(16) NOT NULL,
+            `description` VARCHAR(128) DEFAULT NULL,
+            CONSTRAINT `category_category_id_pk` PRIMARY KEY(`category_id`)
+        )''')
+
+        #Creating task table
+        self.cursor.execute('''CREATE TABLE IF NOT EXISTS `task`(
+            `task_id` INT UNSIGNED AUTO_INCREMENT,
+            `title` VARCHAR(64),
+            `details` VARCHAR(1024),
+            `deadline` TIMESTAMP,
+            `finished` TINYINT DEFAULT 0,
+            `category_id` INT UNSIGNED DEFAULT NULL,
+            CONSTRAINT `task_task_id_pk` PRIMARY KEY(`task_id`),
+            CONSTRAINT `task_category_id_fk` FOREIGN KEY(`category_id`) REFERENCES `category`(`category_id`)
+        )''')
+
+        # self.cursor.execute("INSERT INTO task(title, details, deadline) VALUES ('title', '<details_placeholder>', CURTIME())")
+        # self.connection.commit()
+
         log.debug("Connected succesfully")
 
     def get_rowcount(self):
-        return self.cursor.rowcount
+        self.cursor.execute("SELECT * FROM task")
+        result = self.cursor.fetchall()
+        return self.cursor.rowcount 
 
-    def add_query(self, statement, row):
-        """Example of insert query one row at a time
+    def add_query(self):
+        # Example of insert query one row at a time
 
-        Args:
-            statement (string): sql statement with ? as the place holder of where values should be located
-            row (tuple): values that will replace the ? in the statement 
-        """
-
-        """
-        Example:
-        statement = "INSERT INTO test.contacts(first_name, last_name, email) VALUES (?, ?, ?)",
-        row = (first_name, last_name, email)
-        """
+        print("\n***Create New Task***")
+        title = input("Title: ")
+        details = input("Details: ")
+        
         try:
-            self.cursor.execute(statement, row)
+            self.cursor.execute("INSERT INTO task(title, details, deadline) VALUES ('" + title + "', '" + details + "',  CURTIME())")
             self.connection.commit()
+            print("\nSuccessfully Added!")
+        except mariadb.Error as e:
+            log.error(e)
+
+    def delete_task(self):
+        print("\n***Delete a Task***")
+        id = input("Task Id: ")
+
+        try:
+            self.cursor.execute("DELETE FROM task WHERE task_id=" + id)
+            self.connection.commit()
+            print("\nSuccessfully Deleted!")
         except mariadb.Error as e:
             log.error(e)
 
@@ -79,7 +119,7 @@ class DATABASE():
         return self.cursor
 
     def get_tasks(self):
-        return self.get_query("SELECT title, details FROM task")
+        return self.get_query("SELECT task_id, title, details FROM task")
 
     def close(self):
         self.connection.close()

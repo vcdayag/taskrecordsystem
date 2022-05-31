@@ -16,7 +16,7 @@ python -m virtualenv -p python3.10 env
 Activate the created virtual environment
 
 ```bash
-source env/bin/activate
+source env/Scripts/activate
 ```
 
 run this to check if you are using the virtual environment
@@ -25,7 +25,7 @@ run this to check if you are using the virtual environment
 which python
 ```
 
-output should look like `.../env/bin/python`
+output should look like `.../env/Scripts/python`
 
 to install all of the libraries the was used.
 
@@ -52,15 +52,15 @@ python taskrecordsystem/main.py
 to activate the virtual environment.
 
 ```bash
-source env/bin/activate
+source env/Scripts/activate
 ```
-run this command to run the program.
+run this command to run the program. Don't forget to change the password according to your mysql root password.
 
 ```bash
 python taskrecordsystem/main.py
 ```
 
-to generate a requiremnets.txt for all the libraries that was used.
+to generate a requirements.txt for all the libraries that was used.
 
 ```bash
 pip freeze > requirements.txt
