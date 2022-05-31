@@ -27,10 +27,18 @@ def view_tasks():
         console.print(Panel(Text(details, justify="left"), padding=(1, 5),
                             title=str(task_id) + '. ' + title, title_align="left"))
 
+def add_task():
+    console.print("\n***Create New Task***")
+    title = Prompt.ask("Title")
+    details = Prompt.ask("Details")
+    db.add_task(title,details)
+
+def delete_task():
+    console.print("\n***Delete a Task***")
+    taskid = Prompt.ask("Task Id")
+    db.delete_task(taskid)
 
 CHOICES = ("0", "1", "2", "3")
-
-
 def menu():
     while True:
         print("""
@@ -42,9 +50,9 @@ def menu():
               )
         choice = IntPrompt.ask("Choice", choices=CHOICES, show_choices=False)
         match choice:
-            case 1: db.add_query()
+            case 1: add_task()
             case 2: view_tasks()
-            case 3: db.delete_task()
+            case 3: delete_task()
             case 0: break
 
     # console.print(":pile_of_poo: [prompt.invalid]Number must be between 1 and 10")

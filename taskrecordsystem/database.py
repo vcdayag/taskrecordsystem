@@ -9,18 +9,18 @@ config = dotenv_values()
 
 class DATABASE():
     def __init__(self):
-        self.connection = None
-        self.cursor = None
-        self.connection = mariadb.connect(
-            user=config["TSRUSER"],
-            password=config["TSRPASSWORD"],
-            host="127.0.0.1",
-            port=3306
-        )
-        log.debug("Connected succesfully")
+        try:
+            self.connection = mariadb.connect(
+                user=config["TSRUSER"],
+                password=config["TSRPASSWORD"],
+                host="127.0.0.1",
+                port=3306
+            )
+            self.cursor = self.connection.cursor()
+            log.info("Connected successfully")
+        except mariadb.Error as e:
+            log.error(e)
         
-        self.cursor = self.connection.cursor()
-
         #Creating a database
         self.cursor.execute("CREATE database IF NOT EXISTS taskrecordsystem")
 
@@ -52,28 +52,21 @@ class DATABASE():
         result = self.cursor.fetchall()
         return self.cursor.rowcount 
 
-    def add_query(self):
+    def add_task(self,title,details):
         # Example of insert query one row at a time
-
-        print("\n***Create New Task***")
-        title = input("Title: ")
-        details = input("Details: ")
         
         try:
-            self.cursor.execute("INSERT INTO task(title, details, deadline) VALUES ('" + title + "', '" + details + "',  CURTIME())")
+            self.cursor.execute("INSERT INTO task(title, details, deadline) VALUES (%s, %s, CURTIME())",(title,details))
             self.connection.commit()
-            print("\nSuccessfully Added!")
+            log.info("Successfully Added!")
         except mariadb.Error as e:
             log.error(e)
 
-    def delete_task(self):
-        print("\n***Delete a Task***")
-        id = input("Task Id: ")
-
+    def delete_task(self,taskid):
         try:
-            self.cursor.execute("DELETE FROM task WHERE task_id=" + id)
+            self.cursor.execute("DELETE FROM task WHERE task_id=%s",(taskid,))
             self.connection.commit()
-            print("\nSuccessfully Deleted!")
+            log.info("Successfully Deleted!")
         except mariadb.Error as e:
             log.error(e)
 
@@ -130,5 +123,5 @@ if __name__ == '__main__':
     # Select Statements
     print([x for x in db.get_query("SELECT * FROM category")])
     # Insert Statements
-    db.add_query("INSERT INTO task(title,details,deadline,finished,category_id) VALUES (%s,%s,STR_TO_DATE(%s,'%Y-%m-%d %h:%i:%s'),%d,%d)",
+    db.add_task("INSERT INTO task(title,details,deadline,finished,category_id) VALUES (%s,%s,STR_TO_DATE(%s,'%Y-%m-%d %h:%i:%s'),%d,%d)",
                  ("THIS IS TITLE", "DETAILS", "2013-07-22 12:50:05", True, 1))
