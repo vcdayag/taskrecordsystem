@@ -39,15 +39,15 @@ def delete_task():
     db.delete_task(taskid)
 
 CHOICES = ("0", "1", "2", "3")
+MAINMENUCOMMANDS ="""[0] Quit
+[1] Add Task
+[2] View Tasks
+[3] Delete Task"""
+
 def menu():
     while True:
-        print("""
-            [0] Quit
-            [1] Add Task
-            [2] View Tasks
-            [3] Delete Task
-            """
-              )
+        console.print(Panel(Text(MAINMENUCOMMANDS, justify="left"), padding=(1,1),
+                            title="Main Menu", title_align="center",expand=False),)
         choice = IntPrompt.ask("Choice", choices=CHOICES, show_choices=False)
         match choice:
             case 1: add_task()
