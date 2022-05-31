@@ -2,21 +2,24 @@ import mariadb
 from logger import logger
 log = logger()
 
+from dotenv import dotenv_values
+
+config = dotenv_values()
+
 
 class DATABASE():
     def __init__(self):
         self.connection = None
         self.cursor = None
         self.connection = mariadb.connect(
-            user="root",
-            password="zenith.09",
+            user=config["TSRUSER"],
+            password=config["TSRPASSWORD"],
             host="127.0.0.1",
-            port=3306,
-            database="taskrecordsystem"
+            port=3306
         )
+        log.debug("Connected succesfully")
+        
         self.cursor = self.connection.cursor()
-
-        # self.cursor.execute("DROP database IF EXISTS taskrecordsystem")
 
         #Creating a database
         self.cursor.execute("CREATE database IF NOT EXISTS taskrecordsystem")
@@ -47,7 +50,7 @@ class DATABASE():
         # self.cursor.execute("INSERT INTO task(title, details, deadline) VALUES ('title', '<details_placeholder>', CURTIME())")
         # self.connection.commit()
 
-        log.debug("Connected succesfully")
+        
 
     def get_rowcount(self):
         self.cursor.execute("SELECT * FROM task")
