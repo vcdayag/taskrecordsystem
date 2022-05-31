@@ -50,11 +50,11 @@ class DATABASE():
     def get_rowcount(self):
         return self.cursor.rowcount 
 
-    def add_task(self,title,details):
+    def add_task(self,title,details,deadline):
         # Example of insert query one row at a time
         
         try:
-            self.cursor.execute("INSERT INTO task(title, details, deadline) VALUES (%s, %s, CURTIME())",(title,details))
+            self.cursor.execute("INSERT INTO task(title, details, deadline) VALUES (%s, %s, STR_TO_DATE(%s,'%Y-%m-%d'))",(title,details,deadline))
             self.connection.commit()
             log.info("Successfully Added!")
         except mariadb.Error as e:
@@ -136,7 +136,13 @@ class DATABASE():
     def get_tasks(self):
         return self.get_query("SELECT task_id, title, details FROM task")
     
-    def get_categories(self):
+    def get_tasks_day(self,date):
+        return self.get_query("SELECT task_id, title, details FROM task WHERE DATE_FORMAT(deadline, '%Y-%m-%d') = %s",(date,))
+    
+    def get_tasks_month(self,month):
+        return self.get_query("SELECT task_id, title, details FROM task WHERE DATE_FORMAT(deadline, '%Y-%m') = %s",(month,))
+    
+    def get_categories(self,month):
         return self.get_query("SELECT category_id, name, description FROM category")
 
     def close(self):

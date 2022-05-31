@@ -24,6 +24,28 @@ def view_tasks():
         console.print(Panel(Text(details, justify="left"), padding=(1, 5),
                             title="{}. {}".format(task_id, title), title_align="left"))
 
+def view_tasks_day():
+    day = Prompt.ask("Deadline (YYYY-MM-DD)")
+    result = db.get_tasks_day(day)
+    if db.get_rowcount() == 0:
+        console.print("\nNo Tasks Yet!")
+        return
+
+    for task_id, title, details in result:
+        console.print(Panel(Text(details, justify="left"), padding=(1, 5),
+                            title="{}. {}".format(task_id, title), title_align="left"))
+
+def view_tasks_month():
+    month = Prompt.ask("Deadline (YYYY-MM-DD)")
+    result = db.get_tasks_month(month)
+    if db.get_rowcount() == 0:
+        console.print("\nNo Tasks Yet!")
+        return
+
+    for task_id, title, details in result:
+        console.print(Panel(Text(details, justify="left"), padding=(1, 5),
+                            title="{}. {}".format(task_id, title), title_align="left"))
+
 def view_categories():
     result = db.get_categories()
     if db.get_rowcount() == 0:
@@ -39,7 +61,8 @@ def add_task():
     console.print("\n***Create New Task***")
     title = Prompt.ask("Title")
     details = Prompt.ask("Details")
-    db.add_task(title, details)
+    deadline = Prompt.ask("Deadline (YYYY-MM-DD)")
+    db.add_task(title, details,deadline)
 
 
 def delete_task():
@@ -61,7 +84,7 @@ def delete_category():
     db.delete_category(Id)
 
 
-CHOICES = [str(x) for x in range(7)]
+CHOICES = [str(x) for x in range(9)]
 MAINMENUCOMMANDS = """[0] Quit
 [1] Add Task
 [2] View Tasks
@@ -86,6 +109,8 @@ def menu():
             case 4: add_category()
             case 5: view_categories()
             case 6: delete_category()
+            case 7: view_tasks_day()
+            case 8: view_tasks_month()
             case 0:
                 console.print("Goodbye!")
                 break
@@ -93,10 +118,5 @@ def menu():
     # console.print(":pile_of_poo: [prompt.invalid]Number must be between 1 and 10")
     # print(f"ito napili mo loads {choice} {type(choice)}")
 
-
-def main():
-    menu()
-
-
 if __name__ == '__main__':
-    main()
+    menu()
