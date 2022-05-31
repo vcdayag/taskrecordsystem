@@ -55,18 +55,8 @@ class DATABASE():
         return self.cursor.rowcount 
 
     def add_query(self):
-        """Example of insert query one row at a time
+        # Example of insert query one row at a time
 
-        Args:
-            statement (string): sql statement with ? as the place holder of where values should be located
-            row (tuple): values that will replace the ? in the statement 
-        """
-
-        """
-        Example:
-        statement = "INSERT INTO test.contacts(first_name, last_name, email) VALUES (?, ?, ?)",
-        row = (first_name, last_name, email)
-        """
         print("\n***Create New Task***")
         title = input("Title: ")
         details = input("Details: ")
@@ -75,6 +65,17 @@ class DATABASE():
             self.cursor.execute("INSERT INTO task(title, details, deadline) VALUES ('" + title + "', '" + details + "',  CURTIME())")
             self.connection.commit()
             print("\nSuccessfully Added!")
+        except mariadb.Error as e:
+            log.error(e)
+
+    def delete_task(self):
+        print("\n***Delete a Task***")
+        id = input("Task Id: ")
+
+        try:
+            self.cursor.execute("DELETE FROM task WHERE task_id=" + id)
+            self.connection.commit()
+            print("\nSuccessfully Deleted!")
         except mariadb.Error as e:
             log.error(e)
 
