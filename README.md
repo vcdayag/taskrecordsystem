@@ -33,6 +33,23 @@ to install all of the libraries the was used.
 pip install -r requirements.txt
 ```
 
+**We used the python library [Rich](https://github.com/Textualize/rich) for the User Interface, Inputs, and Logging.**
+
+for the database we must set the username and password inorder to access the database
+
+```bash
+EXAMPLE
+dotenv set TSRUSER root
+dotenv set TSRPASSWORD password
+```
+
+Then run `dotenv list` to check if it is correctly set it should display like this
+
+```bash
+TSRUSER=root
+TSRPASSWORD=password
+```
+
 ### PUT THE INSTRUCTION HERE TO IMPORT THE SQL DUMP FILE PROVIDED
 
 run this command to run the program.
