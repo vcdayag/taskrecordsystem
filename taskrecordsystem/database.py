@@ -66,7 +66,11 @@ class DATABASE():
         try:
             self.cursor.execute("DELETE FROM task WHERE task_id=%s",(taskid,))
             self.connection.commit()
-            log.info("Successfully Deleted!")
+            if self.cursor.rowcount == 0:
+                log.info("No task was deleted")
+            else:
+                log.info("Successfully Deleted!")
+                
         except mariadb.Error as e:
             log.error(e)
 
