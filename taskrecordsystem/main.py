@@ -1,4 +1,5 @@
 # Libraries used
+from turtle import left
 from rich.padding import Padding
 from rich.text import Text
 from rich.panel import Panel
@@ -14,37 +15,44 @@ log = logger()
 db = database.DATABASE()
 
 
-def view_tasks():
-    result = db.get_tasks()
+def view_tasks(viewType="ALL"):
+    match viewType:
+        case "DAY":
+            day = Prompt.ask("Deadline (YYYY-MM-DD)")
+            result = db.get_tasks_day(day)
+        case "MONTH":
+            month = Prompt.ask("Deadline (YYYY-MM)")
+            result = db.get_tasks_month(month)
+        case _:
+            result = db.get_tasks()
+    
     if db.get_rowcount() == 0:
         console.print("\nNo Tasks Yet!")
         return
 
-    for task_id, title, details in result:
-        console.print(Panel(Text(details, justify="left"), padding=(1, 5),
-                            title="{}. {}".format(task_id, title), title_align="left"))
-
-def view_tasks_day():
-    day = Prompt.ask("Deadline (YYYY-MM-DD)")
-    result = db.get_tasks_day(day)
-    if db.get_rowcount() == 0:
-        console.print("\nNo Tasks Yet!")
-        return
-
-    for task_id, title, details in result:
-        console.print(Panel(Text(details, justify="left"), padding=(1, 5),
-                            title="{}. {}".format(task_id, title), title_align="left"))
-
-def view_tasks_month():
-    month = Prompt.ask("Deadline (YYYY-MM-DD)")
-    result = db.get_tasks_month(month)
-    if db.get_rowcount() == 0:
-        console.print("\nNo Tasks Yet!")
-        return
-
-    for task_id, title, details in result:
-        console.print(Panel(Text(details, justify="left"), padding=(1, 5),
-                            title="{}. {}".format(task_id, title), title_align="left"))
+    for task_id, title, details, deadline, finished, category_id in result:
+        info = Text(justify="left")
+        info.append("Category: ", style = "bold green")
+        info.append(str(category_id))
+        info.append(" | ")
+        info.append("Deadline: ", style = "bold green")
+        info.append(str(deadline))
+        info.append(" | ")
+        info.append("Finished: ", style = "bold green")
+        info.append(str(bool(finished)))
+        info.append("\n")
+        info.append(details)
+        
+        console.print(
+            Panel(
+                info,
+                padding=(1, 5),
+                title="{}. {}".format(task_id, title),
+                title_align="left",
+                highlight=True,
+                expand=False
+                )
+            )
 
 def view_categories():
     result = db.get_categories()
@@ -109,8 +117,8 @@ def menu():
             case 4: add_category()
             case 5: view_categories()
             case 6: delete_category()
-            case 7: view_tasks_day()
-            case 8: view_tasks_month()
+            case 7: view_tasks("DAY")
+            case 8: view_tasks("MONTH")
             case 0:
                 console.print("Goodbye!")
                 break

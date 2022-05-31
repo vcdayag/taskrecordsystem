@@ -17,7 +17,7 @@ class DATABASE():
                 port=3306
             )
             self.cursor = self.connection.cursor()
-            log.info("Connected successfully")
+            log.info("[bold green]Connected successfully",extra={"markup":True})
         except mariadb.Error as e:
             log.error(e)
         
@@ -56,7 +56,7 @@ class DATABASE():
         try:
             self.cursor.execute("INSERT INTO task(title, details, deadline) VALUES (%s, %s, STR_TO_DATE(%s,'%Y-%m-%d'))",(title,details,deadline))
             self.connection.commit()
-            log.info("Successfully Added!")
+            log.info("[bold green]Successfully Added!",extra={"markup":True})
         except mariadb.Error as e:
             log.error(e)
     
@@ -66,7 +66,7 @@ class DATABASE():
         try:
             self.cursor.execute("INSERT INTO category(name, description) VALUES (%s, %s)",(name,description))
             self.connection.commit()
-            log.info("Successfully Added!")
+            log.info("[bold green]Successfully Added!",extra={"markup":True})
         except mariadb.Error as e:
             log.error(e)
 
@@ -77,7 +77,7 @@ class DATABASE():
             if self.cursor.rowcount == 0:
                 log.info("No task was deleted")
             else:
-                log.info("Successfully Deleted!")
+                log.info("[bold green]Successfully Deleted!",extra={"markup":True})
                 
         except mariadb.Error as e:
             log.error(e)
@@ -89,7 +89,7 @@ class DATABASE():
             if self.cursor.rowcount == 0:
                 log.info("No task was deleted")
             else:
-                log.info("Successfully Deleted!")
+                log.info("[bold green]Successfully Deleted!",extra={"markup":True})
                 
         except mariadb.Error as e:
             log.error(e)
@@ -134,15 +134,15 @@ class DATABASE():
         return self.cursor.fetchall()
 
     def get_tasks(self):
-        return self.get_query("SELECT task_id, title, details FROM task")
+        return self.get_query("SELECT task_id, title, details, deadline, finished, category_id FROM task")
     
     def get_tasks_day(self,date):
-        return self.get_query("SELECT task_id, title, details FROM task WHERE DATE_FORMAT(deadline, '%Y-%m-%d') = %s",(date,))
+        return self.get_query("SELECT task_id, title, details, deadline, finished, category_id FROM task WHERE DATE_FORMAT(deadline, '%Y-%m-%d') = %s",(date,))
     
     def get_tasks_month(self,month):
-        return self.get_query("SELECT task_id, title, details FROM task WHERE DATE_FORMAT(deadline, '%Y-%m') = %s",(month,))
+        return self.get_query("SELECT task_id, title, details, deadline, finished, category_id FROM task WHERE DATE_FORMAT(deadline, '%Y-%m') = %s",(month,))
     
-    def get_categories(self,month):
+    def get_categories(self):
         return self.get_query("SELECT category_id, name, description FROM category")
 
     def close(self):
