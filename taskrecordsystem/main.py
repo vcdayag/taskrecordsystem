@@ -30,10 +30,10 @@ def view_tasks(viewType="ALL"):
         console.print("\nNo Tasks Yet!")
         return
 
-    for task_id, title, details, deadline, finished, category_id in result:
+    for task_id, title, details, deadline, finished, name in result:
         info = Text(justify="left")
         info.append("Category: ", style="bold green")
-        info.append(str(category_id))
+        info.append(str(name))
         info.append(" | ")
         info.append("Deadline: ", style="bold green")
         info.append(str(deadline))
@@ -76,7 +76,7 @@ def add_task():
 
 def delete_task():
     console.print("\n***Delete a Task***")
-    taskid = Prompt.ask("Task Id")
+    taskid = IntPrompt.ask("Task Id")
     db.delete_task(taskid)
 
 
@@ -89,7 +89,7 @@ def add_category():
 
 def delete_category():
     console.print("\n***Delete a Category***")
-    Id = Prompt.ask("Category Id")
+    Id = IntPrompt.ask("Category Id")
     db.delete_category(Id)
 
 def mark_as_done():
