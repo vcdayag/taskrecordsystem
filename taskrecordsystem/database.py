@@ -1,11 +1,8 @@
-from dotenv import dotenv_values
 import mariadb
 from logger import logger
 import sys
 
 log = logger()
-config = dotenv_values()
-
 
 class DATABASE():
     def __init__(self):
@@ -18,7 +15,7 @@ class DATABASE():
                 database="taskrecordsystem"
             )
             self.cursor = self.connection.cursor()
-            log.info("[bold green]Connected successfully",
+            log.debug("[bold green]Connected successfully",
                      extra={"markup": True})
         except mariadb.Error as e:
             log.error("\n[bold red]%s\n", e, extra={"markup": True})
@@ -45,7 +42,6 @@ class DATABASE():
                 log.info("\n[bold green]%s\n", successful,
                          extra={"markup": True})
         except mariadb.Error as e:
-            print(e)
             log.error("\n[bold red]%s\n", e, extra={"markup": True})
 
     def delete_query(self, statement, row):
@@ -67,6 +63,10 @@ class DATABASE():
     def add_category(self, name, description):
         self.add_query(
             "INSERT INTO category(name, description) VALUES (%s, %s)", (name, description))
+
+    def add_task_to_category(self, categoryId, taskId):
+        self.add_query(
+            "UPDATE task SET category_id=%s WHERE task_id=%s", (categoryId, taskId))
 
     def mark_task_done(self, Id):
         self.update_query(
@@ -95,10 +95,6 @@ class DATABASE():
     def update_category_both(self, name, description, Id):
         self.update_query(
             "UPDATE category SET name=%s, description=%s WHERE category_id=%s", (name, description, Id))
-
-    def add_task_to_category(self, categoryId, taskId):
-        self.add_query(
-            "UPDATE task SET category_id=%s WHERE task_id=%s", (categoryId, taskId))
 
     def delete_task(self, Id):
         self.delete_query("DELETE FROM task WHERE task_id=%d", (Id,))
