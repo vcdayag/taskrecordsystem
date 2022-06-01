@@ -25,7 +25,11 @@ run this to check if you are using the virtual environment
 which python
 ```
 
+<<<<<<< HEAD
 output should look like `.../env/Scripts/python`
+=======
+output should look like `.../trs/bin/python`
+>>>>>>> parent of e2da469 (minor changes in readme)
 
 to install all of the libraries the was used.
 
@@ -63,8 +67,6 @@ python taskrecordsystem/main.py
 `taskrecordsystem/database.py` contains all the sql related code.
 
 `taskrecordsystem/main.py` contains the terminal ui code and user inputs.
-
-`taskrecordsystem/logger.py` contains the logger config and code.
 
 to activate the virtual environment.
 
