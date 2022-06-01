@@ -43,44 +43,44 @@ class DATABASE():
             log.error("\n[bold red]%s\n", e, extra={"markup": True})
 
     def add_task(self, title, details, deadline):
-        self.query.execute("INSERT INTO task(title, details, deadline) VALUES (%s, %s, TIMESTAMP(%s))",
+        self.query("INSERT INTO task(title, details, deadline) VALUES (%s, %s, TIMESTAMP(%s))",
                            (title, details, deadline))
 
     def add_category(self, name, description):
-        self.query.execute(
+        self.query(
             "INSERT INTO category(name, description) VALUES (%s, %s)", (name, description))
 
     def mark_task_done(self, Id):
-        self.query.execute(
+        self.query(
             "UPDATE task SET finished=1 WHERE task_id=%s", (Id,))
 
     def update_task_title(self, title, Id):
-        self.query.execute(
+        self.query(
             "UPDATE task SET title=%s WHERE task_id=%s", (title, Id))
 
     def update_task_details(self, details, Id):
-        self.query.execute(
+        self.query(
             "UPDATE task SET details=%s WHERE task_id=%s", (details, Id))
         log.info("[bold green]Successfully Edited!", extra={"markup": True})
 
     def update_task_both(self, title, details, Id):
-        self.query.execute(
+        self.query(
                 "UPDATE task SET title=%s, details=%s WHERE task_id=%s", (title, details, Id))
 
     def update_category_name(self, name, Id):
-        self.query.execute(
+        self.query(
                 "UPDATE category SET name=%s WHERE category_id=%s", (name, Id))
 
     def update_category_description(self, description, Id):
-        self.query.execute(
+        self.query(
                 "UPDATE category SET description=%s WHERE category_id=%s", (description, Id))
 
     def update_category_both(self, name, description, Id):
-        self.query.execute(
+        self.query(
                 "UPDATE category SET name=%s, description=%s WHERE category_id=%s", (name, description, Id))
 
     def add_task_to_category(self, categoryId, taskId):
-        self.query.execute(
+        self.query(
                 "UPDATE task SET category_id=%s WHERE task_id=%s", (categoryId, taskId))
         
     def delete_task(self, Id):
