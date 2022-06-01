@@ -1,5 +1,6 @@
 # Libraries used
 from turtle import left
+from rich.table import Table
 from rich.padding import Padding
 from rich.text import Text
 from rich.panel import Panel
@@ -27,7 +28,7 @@ def view_tasks(viewType="ALL"):
             result = db.get_tasks()
 
     if db.get_rowcount() == 0:
-        console.print("\nNo Tasks Yet!")
+        log.info("\n[bold orange3]No Tasks Yet!\n", extra={"markup": True})
         return
 
     for task_id, title, details, deadline, finished, name in result:
@@ -51,19 +52,33 @@ def view_tasks(viewType="ALL"):
                 title_align="left",
                 highlight=True,
                 expand=False
-            )
+            ),"\n"
         )
 
 
 def view_categories():
     result = db.get_categories()
     if db.get_rowcount() == 0:
-        console.print("\nNo Categories Yet!")
+        log.info("\n[bold orange3]No Categories Yet!\n", extra={"markup": True})
         return
-
+    
+    table = Table(
+                  title="\nCategories",
+                  header_style="bold green",
+                  leading=1,
+                  title_justify="center",
+                  safe_box=True,
+                  row_styles=["","dim"],
+                  )
+    table.add_column("Category Id",justify="center")
+    table.add_column("Name",justify="center")
+    table.add_column("Description",justify="center")
+    
     for category_id, name, description in result:
-        console.print(Panel(Text(description, justify="left"), padding=(1, 5),
-                            title="{}. {}".format(category_id, name), title_align="left"))
+        table.add_row(str(category_id),name,description)
+        
+    
+    console.print(table,"\n")
 
 
 def add_task():
@@ -92,36 +107,33 @@ def delete_category():
     Id = IntPrompt.ask("Category Id")
     db.delete_category(Id)
 
-def mark_as_done():
+def mark_task_done():
     console.print("\n***Mark Task as Done***")
     taskid = Prompt.ask("Task Id")
     db.mark_task_done(taskid)
 
-def update_task():
-    TASKCHOICES = [str(x) for x in range(4)]
-
-    while True:
-        console.print("""\n***Update a Task***
+TASKCHOICES = [str(x) for x in range(4)]
+TASKCHOICESMESSAGE = """
+***Update a Task***
 [0] Cancel Update
 [1] Title only
 [2] Details only
-[3] Both""")
-        holder = IntPrompt.ask("Choice", choices=TASKCHOICES, show_choices=False)
+[3] Both"""
 
-        match holder:
-            case 0: 
-                console.print("Update Cancelled!")
-                break
-            case 1: 
-                task_title_only()
-                break
-            case 2: 
-                task_details_only()
-                break
-            case 3: 
-                task_both()
-                break
+def update_task():
+    
+    console.print(TASKCHOICESMESSAGE)
+    holder = IntPrompt.ask("Choice", choices=TASKCHOICES, show_choices=False)
 
+    match holder:
+        case 0:
+            log.info("\n[bold orange3]Update Cancelled!\n", extra={"markup": True})
+        case 1: 
+            task_title_only()
+        case 2: 
+            task_details_only()
+        case 3: 
+            task_both()
 
 def task_title_only():
     console.print("\n***Task to be Edited***")
@@ -142,30 +154,28 @@ def task_both():
     newDetails = Prompt.ask("New Details")
     db.update_task_both(newTitle, newDetails, taskid)
 
-def update_category():
-    CATEGORYCHOICES = [str(x) for x in range(4)]
-
-    while True:
-        console.print("""\n***Update a Category***
+CATEGORYCHOICES = [str(x) for x in range(4)]
+CATEGORYMESSAGES = """
+***Update a Category***
 [0] Cancel Update
 [1] Name only
 [2] Description only
-[3] Both""")
-        holder = IntPrompt.ask("Choice", choices=CATEGORYCHOICES, show_choices=False)
+[3] Both"""
 
-        match holder:
-            case 0: 
-                console.print("Update Cancelled!")
-                break
-            case 1: 
-                category_name_only()
-                break
-            case 2: 
-                category_description_only()
-                break
-            case 3: 
-                category_both()
-                break
+def update_category():
+
+    console.print(CATEGORYMESSAGES)
+    holder = IntPrompt.ask("Choice", choices=CATEGORYCHOICES, show_choices=False)
+
+    match holder:
+        case 0: 
+            log.info("\n[bold orange3]Update Cancelled!\n", extra={"markup": True})
+        case 1: 
+            category_name_only()
+        case 2: 
+            category_description_only()
+        case 3: 
+            category_both()
 
 
 def category_name_only():
@@ -214,7 +224,7 @@ MAINMENUCOMMANDS = """[0] Quit
 def menu():
     while True:
         console.print(Panel(Text(MAINMENUCOMMANDS, justify="left"), padding=(1, 1),
-                            title="Main Menu", title_align="center", expand=False),)
+                            title="[bold blue]Task Record System", title_align="center", expand=False),)
         choice = IntPrompt.ask("Choice", choices=CHOICES, show_choices=False)
         match choice:
             case 1: add_task()
@@ -225,7 +235,7 @@ def menu():
             case 6: delete_category()
             case 7: view_tasks("DAY")
             case 8: view_tasks("MONTH")
-            case 9: mark_as_done()
+            case 9: mark_task_done()
             case 10: update_task()
             case 11: update_category()
             case 12: add_task_to_category()
