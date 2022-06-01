@@ -95,7 +95,7 @@ def delete_category():
 def mark_as_done():
     console.print("\n***Mark Task as Done***")
     taskid = Prompt.ask("Task Id")
-    db.mark_as_done(taskid)
+    db.mark_task_done(taskid)
 
 def update_task():
     TASKCHOICES = [str(x) for x in range(4)]
@@ -230,6 +230,7 @@ def menu():
             case 11: update_category()
             case 12: add_task_to_category()
             case 0:
+                db.close()
                 console.print("Goodbye!")
                 break
 

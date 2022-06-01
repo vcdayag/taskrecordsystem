@@ -1,6 +1,6 @@
 # Task Record System
 
-A simplified version of your task listing app in your phone (e.g., Samsung Notes, Google Calendar) where you can list tasks, provide grouping and deadline. That is implemented python.
+A simplified version of your task listing app in your phone (e.g., Samsung Notes, Google Calendar) where you can list tasks, provide grouping and deadline, that is implemented python.
 
 ## Contributors
 
