@@ -1,6 +1,7 @@
 from dotenv import dotenv_values
 import mariadb
 from logger import logger
+import sys
 
 log = logger()
 config = dotenv_values()
@@ -9,42 +10,18 @@ class DATABASE():
     def __init__(self):
         try:
             self.connection = mariadb.connect(
-                user=config["TSRUSER"],
-                password=config["TSRPASSWORD"],
+                user="tsruser",
+                password="tsrpassword",
                 host="127.0.0.1",
-                port=3306
+                port=3306,
+                database="taskrecordsystem"
             )
             self.cursor = self.connection.cursor()
             log.info("[bold green]Connected successfully",
                      extra={"markup": True})
         except mariadb.Error as e:
-            log.error(e)
-
-        # Creating a database
-        self.cursor.execute("CREATE database IF NOT EXISTS taskrecordsystem")
-
-        # Use the database
-        self.cursor.execute("USE taskrecordsystem")
-
-        # Creating category table
-        self.cursor.execute('''CREATE TABLE IF NOT EXISTS `category`(
-            `category_id` INT UNSIGNED AUTO_INCREMENT,
-            `name` VARCHAR(16) NOT NULL,
-            `description` VARCHAR(128) DEFAULT NULL,
-            CONSTRAINT `category_category_id_pk` PRIMARY KEY(`category_id`)
-        )''')
-
-        # Creating task table
-        self.cursor.execute('''CREATE TABLE IF NOT EXISTS `task`(
-            `task_id` INT UNSIGNED AUTO_INCREMENT,
-            `title` VARCHAR(64),
-            `details` VARCHAR(1024),
-            `deadline` TIMESTAMP,
-            `finished` TINYINT DEFAULT 0,
-            `category_id` INT UNSIGNED DEFAULT NULL,
-            CONSTRAINT `task_task_id_pk` PRIMARY KEY(`task_id`),
-            CONSTRAINT `task_category_id_fk` FOREIGN KEY(`category_id`) REFERENCES `category`(`category_id`)
-        )''')
+            log.error("\n[bold red]%s\n",e, extra={"markup": True})
+            sys.exit(0)
 
     def get_rowcount(self):
         return self.cursor.rowcount
@@ -58,7 +35,7 @@ class DATABASE():
             self.connection.commit()
             log.info("[bold green]Successfully Added!", extra={"markup": True})
         except mariadb.Error as e:
-            log.error(e)
+            log.error("\n[bold red]%s\n",e, extra={"markup": True})
 
     def add_category(self, name, description):
         # Example of insert query one row at a time
@@ -69,7 +46,7 @@ class DATABASE():
             self.connection.commit()
             log.info("[bold green]Successfully Added!", extra={"markup": True})
         except mariadb.Error as e:
-            log.error(e)
+            log.error("\n[bold red]%s\n",e, extra={"markup": True})
 
     def mark_as_done(self, Id):
         try:
@@ -78,7 +55,7 @@ class DATABASE():
             self.connection.commit()
             log.info("[bold green]Task Finished!", extra={"markup": True})
         except mariadb.Error as e:
-            log.error(e)
+            log.error("\n[bold red]%s\n",e, extra={"markup": True})
 
     def update_task_title(self, title, Id):
         try:
@@ -87,7 +64,7 @@ class DATABASE():
             self.connection.commit()
             log.info("[bold green]Successfully Edited!", extra={"markup": True})
         except mariadb.Error as e:
-            log.error(e)
+            log.error("\n[bold red]%s\n",e, extra={"markup": True})
 
     def update_task_details(self, details, Id):
         try:
@@ -96,7 +73,7 @@ class DATABASE():
             self.connection.commit()
             log.info("[bold green]Successfully Edited!", extra={"markup": True})
         except mariadb.Error as e:
-            log.error(e)
+            log.error("\n[bold red]%s\n",e, extra={"markup": True})
 
     def update_task_both(self, title, details, Id):
         try:
@@ -105,7 +82,7 @@ class DATABASE():
             self.connection.commit()
             log.info("[bold green]Successfully Edited!", extra={"markup": True})
         except mariadb.Error as e:
-            log.error(e)
+            log.error("\n[bold red]%s\n",e, extra={"markup": True})
 
     def update_category_name(self, name, Id):
         try:
@@ -114,7 +91,7 @@ class DATABASE():
             self.connection.commit()
             log.info("[bold green]Successfully Edited!", extra={"markup": True})
         except mariadb.Error as e:
-            log.error(e)
+            log.error("\n[bold red]%s\n",e, extra={"markup": True})
 
     def update_category_description(self, description, Id):
         try:
@@ -123,7 +100,7 @@ class DATABASE():
             self.connection.commit()
             log.info("[bold green]Successfully Edited!", extra={"markup": True})
         except mariadb.Error as e:
-            log.error(e)
+            log.error("\n[bold red]%s\n",e, extra={"markup": True})
 
     def update_category_both(self, name, description, Id):
         try:
@@ -132,7 +109,7 @@ class DATABASE():
             self.connection.commit()
             log.info("[bold green]Successfully Edited!", extra={"markup": True})
         except mariadb.Error as e:
-            log.error(e)
+            log.error("\n[bold red]%s\n",e, extra={"markup": True})
 
     def add_task_to_category(self, categoryId, taskId):
         try:
@@ -141,7 +118,7 @@ class DATABASE():
             self.connection.commit()
             log.info("[bold green]Successfully Added!", extra={"markup": True})
         except mariadb.Error as e:
-            log.error(e)
+            log.error("\n[bold red]%s\n",e, extra={"markup": True})
 
     def delete_task(self, Id):
         try:
@@ -154,7 +131,7 @@ class DATABASE():
                          extra={"markup": True})
 
         except mariadb.Error as e:
-            log.error(e)
+            log.error("\n[bold red]%s\n",e, extra={"markup": True})
 
     def delete_category(self, Id):
         try:
@@ -168,7 +145,7 @@ class DATABASE():
                          extra={"markup": True})
 
         except mariadb.Error as e:
-            log.error(e)
+            log.error("\n[bold red]%s\n",e, extra={"markup": True})
 
     def add_multiple_query(self, statement, rows):
         """Example of insert query with multiple rows at a time
@@ -187,7 +164,7 @@ class DATABASE():
             self.cursor.executemany(statement, rows)
             self.connection.commit()
         except mariadb.Error as e:
-            log.error(e)
+            log.error("\n[bold red]%s\n",e, extra={"markup": True})
 
     def get_query(self, statement, values=()):
         """_summary_
