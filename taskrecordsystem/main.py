@@ -44,19 +44,19 @@ def view_tasks(viewType="ALL"):
         info.append(" | ")
         info.append("Finished: ", style="bold green")
         info.append(str(bool(finished)))
-        info.append("\n")
+        info.append("\n\n")
         info.append(details)
 
-        console.print(
-            Panel(
-                info,
-                padding=(1, 5),
-                title="{}. {}".format(task_id, title),
-                title_align="left",
-                highlight=True,
-                expand=False
-            ), "\n"
-        )
+        console.print("\n",
+                      Panel(
+                          info,
+                          padding=(1, 5),
+                          title="{}. {}".format(task_id, title),
+                          title_align="left",
+                          highlight=True,
+                          expand=False
+                      )
+                      )
 
 
 def view_categories():
@@ -113,7 +113,7 @@ def delete_category():
 
 def mark_task_done():
     console.print("\n***Mark Task as Done***")
-    taskid = Prompt.ask("Task Id")
+    taskid = IntPrompt.ask("Task Id")
     db.mark_task_done(taskid)
 
 
@@ -127,6 +127,8 @@ TASKCHOICESMESSAGE = """
 
 
 def update_task():
+    view_tasks()
+
     console.print("\n***Task to be Edited***")
     taskid = IntPrompt.ask("Task Id")
 
@@ -166,13 +168,15 @@ def update_task():
         elif newFinished == "No":
             newFinished = 0
 
-        if newCategory == "":
-            newCategory = category_id
-
         try:
-            newCategory = int(newCategory)
+            if newCategory == None:
+                return
+            if newCategory == "":
+                newCategory = category_id
+            else:
+                newCategory = int(newCategory)
         except ValueError as e:
-            log.error("\n[bold red] Invalid Category Id%s\n",
+            log.error("\n[bold red]Invalid Category Id\n",
                       extra={"markup": True})
             return
 
@@ -237,18 +241,18 @@ def add_task_to_category():
 
 
 CHOICES = [str(x) for x in range(13)]
-MAINMENUCOMMANDS = """[0] Quit
-[1] Add Task
-[2] View Tasks
-[3] Delete Task
-[4] Add Category
-[5] View Categories
-[6] Delete Category
-[7] View Tasks (Day)
-[8] View Tasks (Month)
-[9] Mark Task as Done
-[10] Update Task
-[11] Update Category
+MAINMENUCOMMANDS = """ [0] Quit
+ [1] Add Task
+ [2] Edit Task
+ [3] Delete Task
+ [4] View Tasks (All)
+ [5] View Tasks (Day)
+ [6] View Tasks (Month)
+ [7] Mark Task as Done
+ [8] Add Category
+ [9] Edit Category
+[10] Delete Category
+[11] View Categories
 [12] Add Task to Category
 """
 
@@ -260,21 +264,22 @@ def menu():
         choice = IntPrompt.ask("Choice", choices=CHOICES, show_choices=False)
         match choice:
             case 1: add_task()
-            case 2: view_tasks()
+            case 2: update_task()
             case 3: delete_task()
-            case 4: add_category()
-            case 5: view_categories()
-            case 6: delete_category()
-            case 7: view_tasks("DAY")
-            case 8: view_tasks("MONTH")
-            case 9: mark_task_done()
-            case 10: update_task()
-            case 11: update_category()
+            case 4: view_tasks()
+            case 5: view_tasks("DAY")
+            case 6: view_tasks("MONTH")
+            case 7: mark_task_done()
+            case 8: add_category()
+            case 9: update_category()
+            case 10: delete_category()
+            case 11: view_categories()
             case 12: add_task_to_category()
             case 0:
                 db.close()
-                console.print("Goodbye!")
+                console.print("\nGoodbye!")
                 break
+
 
 if __name__ == '__main__':
     menu()
