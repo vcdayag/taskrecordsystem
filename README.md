@@ -5,7 +5,7 @@ A simplified version of your task listing app in your phone (e.g., Samsung Notes
 ## Contributors
 
 - Van Paul Angelo C. Dayag
-- Averi Cipriano
+- Zenith Averi V. Cipriano
 
 ## Installation
 
