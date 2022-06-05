@@ -55,33 +55,33 @@ def view_tasks(viewType="ALL"):
                 title_align="left",
                 highlight=True,
                 expand=False
-            ),"\n"
+            ), "\n"
         )
 
 
 def view_categories():
     result = db.get_categories()
     if db.get_rowcount() == 0:
-        log.info("\n[bold orange3]No Categories Yet!\n", extra={"markup": True})
+        log.info("\n[bold orange3]No Categories Yet!\n",
+                 extra={"markup": True})
         return
-    
+
     table = Table(
-                  title="\nCategories",
-                  header_style="bold green",
-                  leading=1,
-                  title_justify="center",
-                  safe_box=True,
-                  row_styles=["","dim"],
-                  )
-    table.add_column("Category Id",justify="center")
-    table.add_column("Name",justify="center")
-    table.add_column("Description",justify="center")
-    
+        title="\nCategories",
+        header_style="bold green",
+        leading=1,
+        title_justify="center",
+        safe_box=True,
+        row_styles=["", "dim"],
+    )
+    table.add_column("Category Id", justify="center")
+    table.add_column("Name", justify="center")
+    table.add_column("Description", justify="center")
+
     for category_id, name, description in result:
-        table.add_row(str(category_id),name,description)
-        
-    
-    console.print(table,"\n")
+        table.add_row(str(category_id), name, description)
+
+    console.print(table, "\n")
 
 
 def add_task():
@@ -110,10 +110,12 @@ def delete_category():
     Id = IntPrompt.ask("Category Id")
     db.delete_category(Id)
 
+
 def mark_task_done():
     console.print("\n***Mark Task as Done***")
     taskid = Prompt.ask("Task Id")
     db.mark_task_done(taskid)
+
 
 TASKCHOICES = [str(x) for x in range(4)]
 TASKCHOICESMESSAGE = """
@@ -123,14 +125,16 @@ TASKCHOICESMESSAGE = """
 [2] Details only
 [3] Both"""
 
+
 def update_task():
     console.print("\n***Task to be Edited***")
     taskid = IntPrompt.ask("Task Id")
-    
+
     result = db.get_tasks_one(taskid)
 
     if db.get_rowcount() == 0:
-        log.info("\n[bold orange3]Task does not exist!\n", extra={"markup": True})
+        log.info("\n[bold orange3]Task does not exist!\n",
+                 extra={"markup": True})
         return
 
     for task_id, title, details, deadline, finished, category_id, name in result:
@@ -141,12 +145,12 @@ def update_task():
         print(f"Task Finished: {finished}")
         print(f"Task Category id: {category_id}")
         print(f"Task Category: {name}")
-    
+
     console.print("\n***Just Press enter if you will not change the value***")
     newTitle = Prompt.ask("New Title")
     newDetails = Prompt.ask("New Details")
     newDeadline = Prompt.ask("New Deadline (YYYY-MM-DD hh:mm)")
-    newFinished = Prompt.ask("New Finished",choices=["","Yes","No"])
+    newFinished = Prompt.ask("New Finished", choices=["", "Yes", "No"])
     newCategory = Prompt.ask("New Category")
     for task_id, title, details, deadline, finished, category_id, name in result:
         if newTitle == "":
@@ -161,18 +165,20 @@ def update_task():
             newFinished = 1
         elif newFinished == "No":
             newFinished = 0
-        
+
         if newCategory == "":
             newCategory = category_id
-        
+
         try:
             newCategory = int(newCategory)
         except ValueError as e:
-            log.error("\n[bold red] Invalid Category Id%s\n", extra={"markup": True})
+            log.error("\n[bold red] Invalid Category Id%s\n",
+                      extra={"markup": True})
             return
-        
-    
-    db.update_task_whole(taskid,newTitle,newDetails,newDeadline,newFinished,newCategory)
+
+    db.update_task_whole(taskid, newTitle, newDetails,
+                         newDeadline, newFinished, newCategory)
+
 
 CATEGORYCHOICES = [str(x) for x in range(4)]
 CATEGORYMESSAGES = """
@@ -182,45 +188,51 @@ CATEGORYMESSAGES = """
 [2] Description only
 [3] Both"""
 
+
 def update_category():
 
     console.print(CATEGORYMESSAGES)
-    holder = IntPrompt.ask("Choice", choices=CATEGORYCHOICES, show_choices=False)
+    holder = IntPrompt.ask(
+        "Choice", choices=CATEGORYCHOICES, show_choices=False)
 
     match holder:
-        case 0: 
-            log.info("\n[bold orange3]Update Cancelled!\n", extra={"markup": True})
-        case 1: 
+        case 0:
+            log.info("\n[bold orange3]Update Cancelled!\n",
+                     extra={"markup": True})
+        case 1:
             category_name_only()
-        case 2: 
+        case 2:
             category_description_only()
-        case 3: 
+        case 3:
             category_both()
 
 
 def category_name_only():
     console.print("\n***Category to be Edited***")
-    categoryid = Prompt.ask("Category Id")
+    categoryid = IntPrompt.ask("Category Id")
     newName = Prompt.ask("New Name")
     db.update_category_name(newName, categoryid)
 
+
 def category_description_only():
     console.print("\n***Category to be Edited***")
-    categoryid = Prompt.ask("Category Id")
+    categoryid = IntPrompt.ask("Category Id")
     newDescription = Prompt.ask("New Description")
     db.update_category_Description(newDescription, categoryid)
 
+
 def category_both():
     console.print("\n***Category to be Edited***")
-    categoryid = Prompt.ask("Category Id")
+    categoryid = IntPrompt.ask("Category Id")
     newTitle = Prompt.ask("New Title")
     newDescription = Prompt.ask("New Description")
     db.update_category_both(newTitle, newDescription, categoryid)
 
+
 def add_task_to_category():
     console.print("\n***Add a Task to a Category***")
-    taskid = Prompt.ask("Task Id")
-    categoryid = Prompt.ask("Category Id")
+    taskid = IntPrompt.ask("Task Id")
+    categoryid = IntPrompt.ask("Category Id")
     db.add_task_to_category(categoryid, taskid)
 
 
@@ -263,10 +275,6 @@ def menu():
                 db.close()
                 console.print("Goodbye!")
                 break
-
-    # console.print(":pile_of_poo: [prompt.invalid]Number must be between 1 and 10")
-    # print(f"ito napili mo loads {choice} {type(choice)}")
-
 
 if __name__ == '__main__':
     menu()

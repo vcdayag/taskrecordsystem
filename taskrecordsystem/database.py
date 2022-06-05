@@ -69,27 +69,27 @@ class DATABASE():
 
     def add_task_to_category(self, categoryId, taskId):
         self.add_query(
-            "UPDATE task SET category_id=%s WHERE task_id=%s", (categoryId, taskId))
+            "UPDATE task SET category_id=%d WHERE task_id=%d", (categoryId, taskId))
 
     def mark_task_done(self, Id):
         self.update_query(
-            "UPDATE task SET finished=1 WHERE task_id=%s", (Id,))
+            "UPDATE task SET finished=1 WHERE task_id=%d", (Id,))
     
     def update_task_whole(self, Id, title, details, deadline, finished, categoryId):
         self.update_query(
-            "UPDATE task SET title=%s, details=%s, deadline=TIMESTAMP(%s), finished=%d, category_id=%s WHERE task_id=%s", (title, details, deadline, finished, categoryId, Id))
+            "UPDATE task SET title=%s, details=%s, deadline=TIMESTAMP(%s), finished=%d, category_id=%d WHERE task_id=%d", (title, details, deadline, finished, categoryId, Id))
 
     def update_category_name(self, name, Id):
         self.update_query(
-            "UPDATE category SET name=%s WHERE category_id=%s", (name, Id))
+            "UPDATE category SET name=%s WHERE category_id=%d", (name, Id))
 
     def update_category_description(self, description, Id):
         self.update_query(
-            "UPDATE category SET description=%s WHERE category_id=%s", (description, Id))
+            "UPDATE category SET description=%s WHERE category_id=%d", (description, Id))
 
     def update_category_both(self, name, description, Id):
         self.update_query(
-            "UPDATE category SET name=%s, description=%s WHERE category_id=%s", (name, description, Id))
+            "UPDATE category SET name=%s, description=%s WHERE category_id=%d", (name, description, Id))
 
     def delete_task(self, Id):
         self.delete_query("DELETE FROM task WHERE task_id=%d", (Id,))
