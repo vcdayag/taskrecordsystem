@@ -21,14 +21,22 @@ def view_tasks(viewType="ALL"):
         case "DAY":
             day = Prompt.ask("Deadline (YYYY-MM-DD)")
             result = db.get_tasks_day(day)
+            returnMessage = "No tasks on that day"
         case "MONTH":
             month = Prompt.ask("Deadline (YYYY-MM)")
             result = db.get_tasks_month(month)
+            returnMessage = "No tasks on that month"
+        case "CATEGORY":
+            console.print("\n***Press Enter to view tasks with no category***")
+            categoryId = IntPrompt.ask("Category Id",default=0)
+            result = db.get_tasks_category(categoryId)
+            returnMessage = "No tasks on that category"
         case _:
             result = db.get_tasks()
+            returnMessage = "No tasks yet!"
 
     if db.get_rowcount() == 0:
-        log.info("\n[bold orange3]No Tasks Yet!\n", extra={"markup": True})
+        log.info("\n[bold orange3]%s\n", returnMessage, extra={"markup": True})
         return
 
     for task_id, title, details, deadline, finished, category_id, name in result:
@@ -154,6 +162,7 @@ def update_task():
     newDeadline = Prompt.ask("New Deadline (YYYY-MM-DD hh:mm)")
     newFinished = Prompt.ask("New Finished", choices=["", "Yes", "No"])
     newCategory = Prompt.ask("New Category")
+    
     for task_id, title, details, deadline, finished, category_id, name in result:
         if newTitle == "":
             newTitle = title
@@ -240,7 +249,7 @@ def add_task_to_category():
     db.add_task_to_category(categoryid, taskid)
 
 
-CHOICES = [str(x) for x in range(13)]
+CHOICES = [str(x) for x in range(14)]
 MAINMENUCOMMANDS = """ [0] Quit
  [1] Add Task
  [2] Edit Task
@@ -248,12 +257,13 @@ MAINMENUCOMMANDS = """ [0] Quit
  [4] View Tasks (All)
  [5] View Tasks (Day)
  [6] View Tasks (Month)
- [7] Mark Task as Done
- [8] Add Category
- [9] Edit Category
-[10] Delete Category
-[11] View Categories
-[12] Add Task to Category
+ [7] View Tasks (Category)
+ [8] Mark Task as Done
+ [9] Add Category
+[10] Edit Category
+[11] Delete Category
+[12] View Categories
+[13] Add Task to Category
 """
 
 
@@ -269,12 +279,13 @@ def menu():
             case 4: view_tasks()
             case 5: view_tasks("DAY")
             case 6: view_tasks("MONTH")
-            case 7: mark_task_done()
-            case 8: add_category()
-            case 9: update_category()
-            case 10: delete_category()
-            case 11: view_categories()
-            case 12: add_task_to_category()
+            case 7: view_tasks("CATEGORY")
+            case 8: mark_task_done()
+            case 9: add_category()
+            case 10: update_category()
+            case 11: delete_category()
+            case 12: view_categories()
+            case 13: add_task_to_category()
             case 0:
                 db.close()
                 console.print("\nGoodbye!")

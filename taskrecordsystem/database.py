@@ -129,8 +129,7 @@ class DATABASE():
                               FROM task AS t
                               LEFT JOIN category AS c
                               ON t.category_id=c.category_id
-                              WHERE task_id=%d
-                              """,(Id,))
+                              WHERE task_id=%d""",(Id,))
 
     def get_tasks_day(self, date):
         return self.get_query("""
@@ -138,7 +137,7 @@ class DATABASE():
                               FROM task AS t
                               LEFT JOIN category AS c
                               ON t.category_id=c.category_id
-                              AND DATE_FORMAT(deadline, '%Y-%m-%d') = %s""", (date,))
+                              WHERE DATE_FORMAT(deadline, '%Y-%m-%d') = %s""", (date,))
 
     def get_tasks_month(self, month):
         return self.get_query("""
@@ -146,7 +145,24 @@ class DATABASE():
                               FROM task AS t
                               LEFT JOIN category AS c
                               ON t.category_id=c.category_id
-                              AND DATE_FORMAT(deadline, '%Y-%m') = %s""", (month,))
+                              WHERE DATE_FORMAT(deadline, '%Y-%m') = %s""", (month,))
+    
+    def get_tasks_category(self, Id):
+        if Id == 0:
+            return self.get_query("""
+                              SELECT task_id, title, details, deadline, finished, t.category_id, name
+                              FROM task AS t
+                              LEFT JOIN category AS c
+                              ON t.category_id=c.category_id
+                              WHERE t.category_id is NULL""")
+            
+        return self.get_query("""
+                              SELECT task_id, title, details, deadline, finished, t.category_id, name
+                              FROM task AS t
+                              LEFT JOIN category AS c
+                              ON t.category_id=c.category_id
+                              WHERE t.category_id=%d""", (Id,))
+    
 
     def get_categories(self):
         return self.get_query("SELECT * FROM category")
