@@ -16,7 +16,7 @@ A simplified version of your task listing app in your phone (e.g., Samsung Notes
 Login using the root account and run this commands.
 
 ```sql
-CREATE USER IF NOT EXISTS 'tsruser'@'localhost' IDENTIFIED BY 'tsrpassword'; 
+CREATE USER IF NOT EXISTS 'tsruser'@'localhost' IDENTIFIED BY 'tsrpassword';
 CREATE DATABASE IF NOT EXISTS taskrecordsystem;
 GRANT ALL ON taskrecordsystem.* TO 'tsruser'@'localhost';
 USE taskrecordsystem;
@@ -25,32 +25,32 @@ SOURCE TSR.sql;
 
 ### Python Environment Setup
 
-Create a virtual environment with Python 3.10
+Create a virtual environment with Python3.10. **at least version 3.10 of Python is necessary because we used some functions that are first introduced in this version.**
 
 ```bash
 pip install virtualenv
 python -m virtualenv -p python3.10 env
 ```
 
-Activate the created virtual environment
+Activate the created virtual environment.
 
 ```bash
 #in Linux
 source env/bin/activate
 
-#in Windows
-source env/Scripts/activate
+#in Windows must use Command Prompt
+.\env\Scripts\activate.bat
+# if successful the path should look something like this
+# (env) C:\Users\......\taskrecordsystem-main>
 ```
 
-To install all of the libraries that was used. **We used the python library [Rich](https://github.com/Textualize/rich) for the user interface, inputs, and logging.**
+Install all of the libraries that was used. **We used the python library [Rich](https://github.com/Textualize/rich) for the user interface, inputs, and logging.**
 
 ```bash
 pip install -r requirements.txt
 ```
 
-
-
-This command to runs the program.
+This command runs the program.
 
 ```bash
 python taskrecordsystem/main.py
@@ -67,14 +67,16 @@ python taskrecordsystem/main.py
 Activate the virtual environment.
 
 ```bash
-#in linux
+#in Linux
 source env/bin/activate
 
-#in windows
-source env/Scripts/activate
+#in Windows must use Command Prompt
+.\env\Scripts\activate.bat
+# if successful the path should look something like this
+# (env) C:\Users\......\taskrecordsystem-main>
 ```
 
-run this command to run the program.
+This command runs the program.
 
 ```bash
 python taskrecordsystem/main.py
