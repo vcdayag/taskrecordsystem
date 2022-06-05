@@ -13,10 +13,14 @@ A simplified version of your task listing app in your phone (e.g., Samsung Notes
 
 ### Database Setup
 
-Login using the root account and run this command.
+Login using the root account and run this commands.
 
 ```sql
-SOURCE SQLDUMP.sql;
+CREATE USER IF NOT EXISTS 'tsruser'@'localhost' IDENTIFIED BY 'tsrpassword'; 
+CREATE DATABASE IF NOT EXISTS taskrecordsystem;
+GRANT ALL ON taskrecordsystem.* TO 'tsruser'@'localhost';
+USE taskrecordsystem;
+SOURCE TSR.sql;
 ```
 
 ### Python Environment Setup
