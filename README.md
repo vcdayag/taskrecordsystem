@@ -9,7 +9,7 @@ A simplified version of your task listing app in your phone (e.g., Samsung Notes
 
 ## Installation
 
-**Make sure you have installed python and mariadb**
+**Make sure you have installed Python and MariaDB**
 
 ### Database Setup
 
@@ -25,7 +25,7 @@ SOURCE TSR.sql;
 
 ### Python Environment Setup
 
-Create a virtual environment with python 3.10 .
+Create a virtual environment with Python 3.10
 
 ```bash
 pip install virtualenv
@@ -42,13 +42,13 @@ source env/bin/activate
 source env/Scripts/activate
 ```
 
-To install all of the libraries the was used.
+To install all of the libraries that was used. **We used the python library [Rich](https://github.com/Textualize/rich) for the user interface, inputs, and logging.**
 
 ```bash
 pip install -r requirements.txt
 ```
 
-**We used the python library [Rich](https://github.com/Textualize/rich) for the User Interface, Inputs, and Logging.**
+
 
 This command to runs the program.
 
@@ -58,7 +58,7 @@ python taskrecordsystem/main.py
 
 ## Development
 
-`taskrecordsystem/database.py` contains all the sql related code.
+`taskrecordsystem/database.py` contains all the database queries, and sql related code.
 
 `taskrecordsystem/main.py` contains the terminal ui code and user inputs.
 
