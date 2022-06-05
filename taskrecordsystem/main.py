@@ -31,9 +31,12 @@ def view_tasks(viewType="ALL"):
         log.info("\n[bold orange3]No Tasks Yet!\n", extra={"markup": True})
         return
 
-    for task_id, title, details, deadline, finished, name in result:
+    for task_id, title, details, deadline, finished, category_id, name in result:
         info = Text(justify="left")
-        info.append("Category: ", style="bold green")
+        info.append("Category Id: ", style="bold green")
+        info.append(str(category_id))
+        info.append(" | ")
+        info.append("Category Name: ", style="bold green")
         info.append(str(name))
         info.append(" | ")
         info.append("Deadline: ", style="bold green")
@@ -134,6 +137,58 @@ def update_task():
             task_details_only()
         case 3: 
             task_both()
+
+def update_task_all():
+    console.print("\n***Task to be Edited***")
+    taskid = IntPrompt.ask("Task Id")
+    
+    result = db.get_tasks_one(taskid)
+
+    if db.get_rowcount() == 0:
+        log.info("\n[bold orange3]Task does not exist!\n", extra={"markup": True})
+        return
+
+    for task_id, title, details, deadline, finished, category_id, name in result:
+        print(f"\nTask id: {task_id}")
+        print(f"Task Title: {title}")
+        print(f"Task Details: {details}")
+        print(f"Task Deadline: {deadline}")
+        print(f"Task Finished: {finished}")
+        print(f"Task Category id: {category_id}")
+        print(f"Task Category: {name}")
+    
+    console.print("\n***Just Press enter if you will not change the value***")
+    newTitle = Prompt.ask("New Title")
+    newDetails = Prompt.ask("New Details")
+    newDeadline = Prompt.ask("New Deadline (YYYY-MM-DD hh:mm)")
+    newFinished = Prompt.ask("New Finished",choices=["","Yes","No"])
+    newCategory = Prompt.ask("New Category")
+    for task_id, title, details, deadline, finished, category_id, name in result:
+        if newTitle == "":
+            newTitle = title
+        if newDetails == "":
+            newDetails = details
+        if newDeadline == "":
+            newDeadline = deadline
+        if newFinished == "":
+            newFinished = finished
+        elif newFinished == "Yes":
+            newFinished = 1
+        elif newFinished == "No":
+            newFinished = 0
+        
+        if newCategory == "":
+            newCategory = category_id
+        
+        try:
+            newCategory = int(newCategory)
+        except ValueError as e:
+            log.error("\n[bold red] Invalid Category Id%s\n", extra={"markup": True})
+            return
+        
+    
+    db.update_task_whole(taskid,newTitle,newDetails,newDeadline,newFinished,newCategory)
+    
 
 def task_title_only():
     console.print("\n***Task to be Edited***")
@@ -236,7 +291,7 @@ def menu():
             case 7: view_tasks("DAY")
             case 8: view_tasks("MONTH")
             case 9: mark_task_done()
-            case 10: update_task()
+            case 10: update_task_all()
             case 11: update_category()
             case 12: add_task_to_category()
             case 0:

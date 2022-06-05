@@ -83,6 +83,10 @@ class DATABASE():
     def update_task_both(self, title, details, Id):
         self.update_query(
             "UPDATE task SET title=%s, details=%s WHERE task_id=%s", (title, details, Id))
+    
+    def update_task_whole(self, Id, title, details, deadline, finished, categoryId):
+        self.update_query(
+            "UPDATE task SET title=%s, details=%s, deadline=TIMESTAMP(%s), finished=%d, category_id=%s WHERE task_id=%s", (title, details, deadline, finished, categoryId, Id))
 
     def update_category_name(self, name, Id):
         self.update_query(
@@ -122,15 +126,24 @@ class DATABASE():
 
     def get_tasks(self):
         return self.get_query("""
-                              SELECT task_id, title, details, deadline, finished, name
+                              SELECT task_id, title, details, deadline, finished, t.category_id, name
                               FROM task AS t
                               LEFT JOIN category AS c
                               ON t.category_id=c.category_id
                               """)
+    
+    def get_tasks_one(self,Id):
+        return self.get_query("""
+                              SELECT task_id, title, details, deadline, finished, t.category_id, name
+                              FROM task AS t
+                              LEFT JOIN category AS c
+                              ON t.category_id=c.category_id
+                              WHERE task_id=%d
+                              """,(Id,))
 
     def get_tasks_day(self, date):
         return self.get_query("""
-                              SELECT task_id, title, details, deadline, finished, name
+                              SELECT task_id, title, details, deadline, finished, t.category_id, name
                               FROM task AS t
                               LEFT JOIN category AS c
                               ON t.category_id=c.category_id
@@ -138,7 +151,7 @@ class DATABASE():
 
     def get_tasks_month(self, month):
         return self.get_query("""
-                              SELECT task_id, title, details, deadline, finished, name
+                              SELECT task_id, title, details, deadline, finished, t.category_id, name
                               FROM task AS t
                               LEFT JOIN category AS c
                               ON t.category_id=c.category_id
