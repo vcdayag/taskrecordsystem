@@ -28,7 +28,7 @@ def view_tasks(viewType="ALL"):
             returnMessage = "No tasks on that month"
         case "CATEGORY":
             console.print("\n***Press Enter to view tasks with no category***")
-            categoryId = IntPrompt.ask("Category Id",default=0)
+            categoryId = IntPrompt.ask("Category Id",default=0,show_default=False)
             result = db.get_tasks_category(categoryId)
             returnMessage = "No tasks on that category"
         case _:
@@ -101,6 +101,7 @@ def add_task():
 
 
 def delete_task():
+    view_tasks()
     console.print("\n***Delete a Task***")
     taskid = IntPrompt.ask("Task Id")
     db.delete_task(taskid)
@@ -114,12 +115,14 @@ def add_category():
 
 
 def delete_category():
+    view_categories()
     console.print("\n***Delete a Category***")
     Id = IntPrompt.ask("Category Id")
     db.delete_category(Id)
 
 
 def mark_task_done():
+    view_tasks()
     console.print("\n***Mark Task as Done***")
     taskid = IntPrompt.ask("Task Id")
     db.mark_task_done(taskid)
@@ -245,6 +248,7 @@ def category_both():
 def add_task_to_category():
     console.print("\n***Add a Task to a Category***")
     taskid = IntPrompt.ask("Task Id")
+    view_categories()
     categoryid = IntPrompt.ask("Category Id")
     db.add_task_to_category(categoryid, taskid)
 
