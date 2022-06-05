@@ -124,21 +124,6 @@ TASKCHOICESMESSAGE = """
 [3] Both"""
 
 def update_task():
-    
-    console.print(TASKCHOICESMESSAGE)
-    holder = IntPrompt.ask("Choice", choices=TASKCHOICES, show_choices=False)
-
-    match holder:
-        case 0:
-            log.info("\n[bold orange3]Update Cancelled!\n", extra={"markup": True})
-        case 1: 
-            task_title_only()
-        case 2: 
-            task_details_only()
-        case 3: 
-            task_both()
-
-def update_task_all():
     console.print("\n***Task to be Edited***")
     taskid = IntPrompt.ask("Task Id")
     
@@ -188,26 +173,6 @@ def update_task_all():
         
     
     db.update_task_whole(taskid,newTitle,newDetails,newDeadline,newFinished,newCategory)
-    
-
-def task_title_only():
-    console.print("\n***Task to be Edited***")
-    taskid = Prompt.ask("Task Id")
-    newTitle = Prompt.ask("New Title")
-    db.update_task_title(newTitle, taskid)
-
-def task_details_only():
-    console.print("\n***Task to be Edited***")
-    taskid = Prompt.ask("Task Id")
-    newDetails = Prompt.ask("New Details")
-    db.update_task_details(newDetails, taskid)
-
-def task_both():
-    console.print("\n***Task to be Edited***")
-    taskid = Prompt.ask("Task Id")
-    newTitle = Prompt.ask("New Title")
-    newDetails = Prompt.ask("New Details")
-    db.update_task_both(newTitle, newDetails, taskid)
 
 CATEGORYCHOICES = [str(x) for x in range(4)]
 CATEGORYMESSAGES = """
@@ -291,7 +256,7 @@ def menu():
             case 7: view_tasks("DAY")
             case 8: view_tasks("MONTH")
             case 9: mark_task_done()
-            case 10: update_task_all()
+            case 10: update_task()
             case 11: update_category()
             case 12: add_task_to_category()
             case 0:

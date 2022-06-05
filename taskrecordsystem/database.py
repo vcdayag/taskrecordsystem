@@ -42,7 +42,10 @@ class DATABASE():
                 log.info("\n[bold green]%s\n", successful,
                          extra={"markup": True})
         except mariadb.Error as e:
-            log.error("\n[bold red]%s\n", e, extra={"markup": True})
+            if e.errno == 1452:
+                log.error("\n[bold red]Category Id does not exist!\n", extra={"markup": True})
+            else:
+                log.error("\n[bold red]%s\n", e, extra={"markup": True})
 
     def delete_query(self, statement, row):
         self.query(statement, row, "Successfully Deleted!",
@@ -71,18 +74,6 @@ class DATABASE():
     def mark_task_done(self, Id):
         self.update_query(
             "UPDATE task SET finished=1 WHERE task_id=%s", (Id,))
-
-    def update_task_title(self, title, Id):
-        self.update_query(
-            "UPDATE task SET title=%s WHERE task_id=%s", (title, Id))
-
-    def update_task_details(self, details, Id):
-        self.update_query(
-            "UPDATE task SET details=%s WHERE task_id=%s", (details, Id))
-
-    def update_task_both(self, title, details, Id):
-        self.update_query(
-            "UPDATE task SET title=%s, details=%s WHERE task_id=%s", (title, details, Id))
     
     def update_task_whole(self, Id, title, details, deadline, finished, categoryId):
         self.update_query(
