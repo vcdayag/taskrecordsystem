@@ -15,6 +15,7 @@ def logger(l="INFO"):
 
 
 if __name__ == '__main__':
+    # Test Examples
     log = logger()
     log.debug("this is debug")
     log.info("[bold green]Hello, World!", extra={"markup": True})

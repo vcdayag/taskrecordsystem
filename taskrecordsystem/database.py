@@ -8,8 +8,8 @@ class DATABASE():
     def __init__(self):
         try:
             self.connection = mariadb.connect(
-                user="tsruser",
-                password="tsrpassword",
+                user="trsuser",
+                password="trspassword",
                 host="127.0.0.1",
                 port=3306,
                 database="taskrecordsystem"
