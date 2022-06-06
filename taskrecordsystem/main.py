@@ -170,10 +170,13 @@ def update_task():
     for task_id, title, details, deadline, finished, category_id, name in result:
         if newTitle == "":
             newTitle = title
+        
         if newDetails == "":
             newDetails = details
+        
         if newDeadline == "":
             newDeadline = deadline
+        
         if newFinished == "":
             newFinished = finished
         elif newFinished == "Yes":
@@ -182,8 +185,6 @@ def update_task():
             newFinished = 0
 
         try:
-            if newCategory == None:
-                return
             if newCategory == "":
                 newCategory = category_id
             else:
