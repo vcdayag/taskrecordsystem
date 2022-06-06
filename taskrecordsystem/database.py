@@ -4,6 +4,7 @@ import sys
 
 log = logger()
 
+
 class DATABASE():
     def __init__(self):
         try:
@@ -16,7 +17,7 @@ class DATABASE():
             )
             self.cursor = self.connection.cursor()
             log.debug("[bold green]Connected successfully",
-                     extra={"markup": True})
+                      extra={"markup": True})
         except mariadb.Error as e:
             log.error("\n[bold red]%s\n", e, extra={"markup": True})
             sys.exit(0)
@@ -43,25 +44,26 @@ class DATABASE():
                          extra={"markup": True})
         except mariadb.Error as e:
             if e.errno == 1452:
-                log.error("\n[bold red]Category Id does not exist!\n", extra={"markup": True})
+                log.error("\n[bold red]Category Id does not exist!\n", extra={
+                          "markup": True})
             else:
                 log.error("\n[bold red]%s\n", e, extra={"markup": True})
 
     def delete_query(self, statement, row):
         self.query(statement, row, "Successfully Deleted!",
                    "Nothing was deleted")
-    
+
     def update_query(self, statement, row):
         self.query(statement, row, "Successfully Edited!",
                    "Nothing was edited")
-    
+
     def add_query(self, statement, row):
         self.query(statement, row, "Successfully Added!",
                    "Nothing was added")
 
     def add_task(self, title, details, deadline):
         self.add_query("INSERT INTO task(title, details, deadline) VALUES (%s, %s, TIMESTAMP(%s))",
-                   (title, details, deadline))
+                       (title, details, deadline))
 
     def add_category(self, name, description):
         self.add_query(
@@ -74,7 +76,7 @@ class DATABASE():
     def mark_task_done(self, Id):
         self.update_query(
             "UPDATE task SET finished=1 WHERE task_id=%d", (Id,))
-    
+
     def update_task_whole(self, Id, title, details, deadline, finished, categoryId):
         self.update_query(
             "UPDATE task SET title=%s, details=%s, deadline=TIMESTAMP(%s), finished=%d, category_id=%d WHERE task_id=%d", (title, details, deadline, finished, categoryId, Id))
@@ -122,14 +124,14 @@ class DATABASE():
                               LEFT JOIN category AS c
                               ON t.category_id=c.category_id
                               """)
-    
-    def get_tasks_one(self,Id):
+
+    def get_tasks_one(self, Id):
         return self.get_query("""
                               SELECT task_id, title, details, deadline, finished, t.category_id, name
                               FROM task AS t
                               LEFT JOIN category AS c
                               ON t.category_id=c.category_id
-                              WHERE task_id=%d""",(Id,))
+                              WHERE task_id=%d""", (Id,))
 
     def get_tasks_day(self, date):
         return self.get_query("""
@@ -146,7 +148,7 @@ class DATABASE():
                               LEFT JOIN category AS c
                               ON t.category_id=c.category_id
                               WHERE DATE_FORMAT(deadline, '%Y-%m') = %s""", (month,))
-    
+
     def get_tasks_category(self, Id):
         if Id == 0:
             return self.get_query("""
@@ -155,14 +157,13 @@ class DATABASE():
                               LEFT JOIN category AS c
                               ON t.category_id=c.category_id
                               WHERE t.category_id is NULL""")
-            
+
         return self.get_query("""
                               SELECT task_id, title, details, deadline, finished, t.category_id, name
                               FROM task AS t
                               LEFT JOIN category AS c
                               ON t.category_id=c.category_id
                               WHERE t.category_id=%d""", (Id,))
-    
 
     def get_categories(self):
         return self.get_query("SELECT * FROM category")

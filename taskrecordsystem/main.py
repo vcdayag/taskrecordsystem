@@ -28,7 +28,8 @@ def view_tasks(viewType="ALL"):
             returnMessage = "No tasks on that month"
         case "CATEGORY":
             console.print("\n***Press Enter to view tasks with no category***")
-            categoryId = IntPrompt.ask("Category Id",default=0,show_default=False)
+            categoryId = IntPrompt.ask(
+                "Category Id", default=0, show_default=False)
             result = db.get_tasks_category(categoryId)
             returnMessage = "No tasks on that category"
         case _:
@@ -165,7 +166,7 @@ def update_task():
     newDeadline = Prompt.ask("New Deadline (YYYY-MM-DD hh:mm)")
     newFinished = Prompt.ask("New Finished", choices=["", "Yes", "No"])
     newCategory = Prompt.ask("New Category")
-    
+
     for task_id, title, details, deadline, finished, category_id, name in result:
         if newTitle == "":
             newTitle = title
@@ -267,8 +268,7 @@ MAINMENUCOMMANDS = """ [0] Quit
 [10] Edit Category
 [11] Delete Category
 [12] View Categories
-[13] Add Task to Category
-"""
+[13] Add Task to Category"""
 
 
 def menu():
