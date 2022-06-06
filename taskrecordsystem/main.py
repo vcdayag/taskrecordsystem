@@ -129,15 +129,6 @@ def mark_task_done():
     db.mark_task_done(taskid)
 
 
-TASKCHOICES = [str(x) for x in range(4)]
-TASKCHOICESMESSAGE = """
-***Update a Task***
-[0] Cancel Update
-[1] Title only
-[2] Details only
-[3] Both"""
-
-
 def update_task():
     view_tasks()
 
@@ -170,13 +161,13 @@ def update_task():
     for task_id, title, details, deadline, finished, category_id, name in result:
         if newTitle == "":
             newTitle = title
-        
+
         if newDetails == "":
             newDetails = details
-        
+
         if newDeadline == "":
             newDeadline = deadline
-        
+
         if newFinished == "":
             newFinished = finished
         elif newFinished == "Yes":
@@ -226,6 +217,7 @@ def update_category():
 
 
 def category_name_only():
+    view_categories()
     console.print("\n***Category to be Edited***")
     categoryid = IntPrompt.ask("Category Id")
     newName = Prompt.ask("New Name")
@@ -233,6 +225,7 @@ def category_name_only():
 
 
 def category_description_only():
+    view_categories()
     console.print("\n***Category to be Edited***")
     categoryid = IntPrompt.ask("Category Id")
     newDescription = Prompt.ask("New Description")
@@ -240,6 +233,7 @@ def category_description_only():
 
 
 def category_both():
+    view_categories()
     console.print("\n***Category to be Edited***")
     categoryid = IntPrompt.ask("Category Id")
     newTitle = Prompt.ask("New Title")
@@ -248,6 +242,7 @@ def category_both():
 
 
 def add_task_to_category():
+    view_tasks()
     console.print("\n***Add a Task to a Category***")
     taskid = IntPrompt.ask("Task Id")
     view_categories()
