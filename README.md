@@ -13,7 +13,7 @@ A simplified version of your task listing app in your phone (e.g., Samsung Notes
 
 ### Database Setup
 
-Login using the root account and run this commands.
+Login using the root account and run this commands. **The MariaDB instance should be hosted on 127.0.0.1 port 3306**
 
 ```sql
 CREATE USER IF NOT EXISTS 'trsuser'@'localhost' IDENTIFIED BY 'trspassword';
@@ -41,7 +41,7 @@ source env/bin/activate
 #in Windows must use Command Prompt
 .\env\Scripts\activate.bat
 # if successful the path should look something like this
-# (env) C:\Users\......\taskrecordsystem-main>
+# (env) C:\...\taskrecordsystem-main>
 ```
 
 Install all of the libraries that was used. **We used the python library [Rich](https://github.com/Textualize/rich) for the user interface, inputs, and logging.**
@@ -73,7 +73,7 @@ source env/bin/activate
 #in Windows must use Command Prompt
 .\env\Scripts\activate.bat
 # if successful the path should look something like this
-# (env) C:\Users\......\taskrecordsystem-main>
+# (env) C:\...\taskrecordsystem-main>
 ```
 
 This command runs the program.
