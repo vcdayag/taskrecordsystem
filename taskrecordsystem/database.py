@@ -43,6 +43,9 @@ class DATABASE():
                 log.info("\n[bold green]%s\n", successful,
                          extra={"markup": True})
         except mariadb.Error as e:
+            if e.errno == 1451:
+                log.error("\n[bold red]Tasks exists in this Category therefore it can not be deleted!\n", extra={
+                          "markup": True})
             if e.errno == 1452:
                 log.error("\n[bold red]Category Id does not exist!\n", extra={
                           "markup": True})
@@ -80,6 +83,10 @@ class DATABASE():
     def update_task_whole(self, Id, title, details, deadline, finished, categoryId):
         self.update_query(
             "UPDATE task SET title=%s, details=%s, deadline=TIMESTAMP(%s), finished=%d, category_id=%d WHERE task_id=%d", (title, details, deadline, finished, categoryId, Id))
+
+    def update_task_to_delete(self, categoryId):
+        self.update_query(
+            "UPDATE task SET category_id = NULL WHERE category_id=%d", (categoryId,))
 
     def update_category_name(self, name, Id):
         self.update_query(
@@ -167,6 +174,9 @@ class DATABASE():
 
     def get_categories(self):
         return self.get_query("SELECT * FROM category")
+
+    def get_category_one(self, Id):
+        return self.get_query("SELECT * FROM category WHERE category_id=%d", (Id,))
 
     def close(self):
         self.connection.close()

@@ -2,6 +2,7 @@
 from turtle import left
 from rich.table import Table
 from rich.padding import Padding
+from rich.prompt import Confirm
 from rich.text import Text
 from rich.panel import Panel
 from rich.columns import Columns
@@ -27,6 +28,9 @@ def view_tasks(viewType="ALL"):
             result = db.get_tasks_month(month)
             returnMessage = "No tasks on that month"
         case "CATEGORY":
+            if not view_categories():
+                return
+    
             console.print("\n***Press Enter to view tasks with no category***")
             categoryId = IntPrompt.ask(
                 "Category Id", default=0, show_default=False)
@@ -38,7 +42,7 @@ def view_tasks(viewType="ALL"):
 
     if db.get_rowcount() == 0:
         log.info("\n[bold orange3]%s\n", returnMessage, extra={"markup": True})
-        return
+        return False
 
     for task_id, title, details, deadline, finished, category_id, name in result:
         info = Text(justify="left")
@@ -67,13 +71,15 @@ def view_tasks(viewType="ALL"):
                       )
                       )
 
+    return True
+
 
 def view_categories():
     result = db.get_categories()
     if db.get_rowcount() == 0:
         log.info("\n[bold orange3]No Categories Yet!\n",
                  extra={"markup": True})
-        return
+        return False
 
     table = Table(
         title="\nCategories",
@@ -91,6 +97,7 @@ def view_categories():
         table.add_row(str(category_id), name, description)
 
     console.print(table, "\n")
+    return True
 
 
 def add_task():
@@ -102,7 +109,9 @@ def add_task():
 
 
 def delete_task():
-    view_tasks()
+    if not view_tasks():
+        return
+
     console.print("\n***Delete a Task***")
     taskid = IntPrompt.ask("Task Id")
     db.delete_task(taskid)
@@ -116,21 +125,37 @@ def add_category():
 
 
 def delete_category():
-    view_categories()
+    if not view_categories():
+        return
+
     console.print("\n***Delete a Category***")
     Id = IntPrompt.ask("Category Id")
+    db.get_category_one(Id)
+    if db.get_rowcount() == 1:
+        console.print(
+            f"\nThis Category Contains {db.get_rowcount()} Task(s). No tasks will be deleted.")
+        confirmDelete = Confirm.ask("Confirm to delete Category")
+        if confirmDelete == True:
+            db.update_task_to_delete(Id)
+        else:
+            log.info("\n[bold orange3]Delete Category Cancelled!\n",
+                     extra={"markup": True})
+            return
     db.delete_category(Id)
 
 
 def mark_task_done():
-    view_tasks()
+    if not view_tasks():
+        return
+
     console.print("\n***Mark Task as Done***")
     taskid = IntPrompt.ask("Task Id")
     db.mark_task_done(taskid)
 
 
 def update_task():
-    view_tasks()
+    if not view_tasks():
+        return
 
     console.print("\n***Task to be Edited***")
     taskid = IntPrompt.ask("Task Id")
@@ -217,7 +242,9 @@ def update_category():
 
 
 def category_name_only():
-    view_categories()
+    if not view_categories():
+        return
+
     console.print("\n***Category to be Edited***")
     categoryid = IntPrompt.ask("Category Id")
     newName = Prompt.ask("New Name")
@@ -225,7 +252,9 @@ def category_name_only():
 
 
 def category_description_only():
-    view_categories()
+    if not view_categories():
+        return
+
     console.print("\n***Category to be Edited***")
     categoryid = IntPrompt.ask("Category Id")
     newDescription = Prompt.ask("New Description")
@@ -233,7 +262,9 @@ def category_description_only():
 
 
 def category_both():
-    view_categories()
+    if not view_categories():
+        return
+
     console.print("\n***Category to be Edited***")
     categoryid = IntPrompt.ask("Category Id")
     newTitle = Prompt.ask("New Title")
@@ -242,10 +273,14 @@ def category_both():
 
 
 def add_task_to_category():
-    view_tasks()
+    if not view_tasks():
+        return
+
+    if not view_categories():
+        return
+
     console.print("\n***Add a Task to a Category***")
     taskid = IntPrompt.ask("Task Id")
-    view_categories()
     categoryid = IntPrompt.ask("Category Id")
     db.add_task_to_category(categoryid, taskid)
 
